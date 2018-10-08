@@ -35,7 +35,7 @@ async def make_room(race_info):
     # Send PM alerts
     alert_pref = UserPrefs(daily_alert=None, race_alert=True)
 
-    alert_string = 'A new race has been started:\nFormat: {1}\nChannel: {0}'.format(
+    alert_string = 'A new race has been started:\nCategory: {1}\nChannel: {0}'.format(
         race_channel.mention, race_info.cat_str)
     for member_id in await userdb.get_all_discord_ids_matching_prefs(alert_pref):
         member = server.find_member(discord_id=member_id)
