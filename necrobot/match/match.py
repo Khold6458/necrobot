@@ -3,7 +3,7 @@ from typing import Callable
 
 import pytz
 
-from match.matchgsheetinfo import MatchGSheetInfo
+from necrobot.match.matchgsheetinfo import MatchGSheetInfo
 from necrobot.match.matchinfo import MatchInfo
 # from necrobot.match.matchracedata import MatchRaceData
 from necrobot.race.raceinfo import RaceInfo
@@ -31,9 +31,9 @@ class Match(object):
             gsheet_info=None,
             finish_time=None
     ):
-        """Create a `Match` object. There should be no need to call this directly; use `matchutil.make_match` instead, 
+        """Create a `Match` object. There should be no need to call this directly; use `matchutil.make_match` instead,
         since this needs to interact with the database.
-        
+
         Parameters
         ----------
         commit_fn: Callable
@@ -231,7 +231,7 @@ class Match(object):
         return await userlib.get_user(user_id=self._cawmentator_id)
 
     def racing_in_match(self, user) -> bool:
-        """        
+        """
         Parameters
         ----------
         user: NecroUser
@@ -269,7 +269,7 @@ class Match(object):
     @commits
     def set_finish_time(self, time: datetime.datetime) -> None:
         """Sets the finishing time for the match.
-        
+
         Parameters
         ----------
         time: datetime.datetime
@@ -280,7 +280,7 @@ class Match(object):
     @commits
     def suggest_time(self, time: datetime.datetime) -> None:
         """Unconfirms all previous times and suggests a new time for the match.
-        
+
         Parameters
         ----------
         time: datetime.datetime
@@ -293,7 +293,7 @@ class Match(object):
     def confirm_time(self, racer: NecroUser) -> None:
         """Confirms the current suggested time by the given racer. (The match is scheduled after
         both racers have confirmed.)
-        
+
         Parameters
         ----------
         racer: NecroUser
@@ -305,10 +305,10 @@ class Match(object):
 
     @commits
     def unconfirm_time(self, racer: NecroUser) -> None:
-        """Attempts to unconfirm the current suggested time by the given racer. This deletes the 
-        suggested time if either the match is not already scheduled or the other racer has also 
+        """Attempts to unconfirm the current suggested time by the given racer. This deletes the
+        suggested time if either the match is not already scheduled or the other racer has also
         indicated a desire to unconfirm.
-        
+
         Parameters
         ----------
         racer: NecroUser
@@ -347,7 +347,7 @@ class Match(object):
     @commits
     def set_repeat(self, number: int) -> None:
         """Sets the match type to be a repeat-X.
-        
+
         Parameters
         ----------
         number: int
@@ -359,7 +359,7 @@ class Match(object):
     @commits
     def set_best_of(self, number: int) -> None:
         """Sets the match type to be a best-of-X.
-        
+
         Parameters
         ----------
         number: int
@@ -371,7 +371,7 @@ class Match(object):
     @commits
     def set_race_info(self, race_info: RaceInfo) -> None:
         """Sets the type of races to be done in the match.
-        
+
         Parameters
         ----------
         race_info: RaceInfo
@@ -382,7 +382,7 @@ class Match(object):
     @commits
     def set_cawmentator_id(self, cawmentator_id: int or None) -> None:
         """Sets a cawmentator for the match. Using cawmentator_id = None will remove cawmentary.
-        
+
         Parameters
         ----------
         cawmentator_id: Optional[int]
@@ -393,7 +393,7 @@ class Match(object):
     @commits
     def set_channel_id(self, channel_id: int or None) -> None:
         """Sets a channel ID for the match.
-        
+
         Parameters
         ----------
         channel_id: Optional[int]

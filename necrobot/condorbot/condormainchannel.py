@@ -23,7 +23,6 @@ class CondorMainChannel(BotChannel):
             cmd_leaguestats.LeagueFastest(self),
             cmd_leaguestats.LeagueStats(self),
 
-            cmd_user.RTMP(self),
             cmd_user.SetInfo(self),
             cmd_user.Timezone(self),
             cmd_user.Twitch(self),

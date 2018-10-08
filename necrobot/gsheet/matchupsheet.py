@@ -6,7 +6,7 @@ import unittest
 import pytz
 
 import necrobot.exception
-from match.matchgsheetinfo import MatchGSheetInfo
+from necrobot.match.matchgsheetinfo import MatchGSheetInfo
 from necrobot.gsheet.spreadsheets import Spreadsheets
 from necrobot.gsheet.worksheetindexdata import WorksheetIndexData
 from necrobot.match import matchinfo
@@ -62,7 +62,7 @@ class MatchupSheet(object):
 
     def uncreated_matches(self):
         """All matches that failed to make from the most recent call to get_matches
-        
+
         Returns
         -------
         list[str]
@@ -74,12 +74,12 @@ class MatchupSheet(object):
 
     async def get_matches(self, **kwargs):
         """Read racer names and match types from the GSheet; create corresponding matches.
-        
+
         Parameters
         ----------
         kwargs:
             Parameters to be passed to matchutil.make_match for every match made.
-        
+
         Returns
         -------
         list[Match]
@@ -178,7 +178,7 @@ class MatchupSheet(object):
 
     async def schedule_match(self, match: Match):
         """Write scheduling data for the match into the GSheet.
-        
+
         Parameters
         ----------
         match: Match
@@ -202,7 +202,7 @@ class MatchupSheet(object):
 
     async def set_vod(self, match: Match, vod_link: str):
         """Add a vod link to the GSheet.
-        
+
         Parameters
         ----------
         match: Match
@@ -226,7 +226,7 @@ class MatchupSheet(object):
 
     async def set_cawmentary(self, match: Match):
         """Add a cawmentator to the GSheet.
-        
+
         Parameters
         ----------
         match: Match
@@ -250,7 +250,7 @@ class MatchupSheet(object):
 
     async def record_score(self, match: Match, winner: str, winner_wins: int, loser_wins: int):
         """Record the winner and final score of the match.
-        
+
         Parameters
         ----------
         match: Match
@@ -283,7 +283,7 @@ class MatchupSheet(object):
 
     async def _get_match_row(self, match: Match) -> int or None:
         """Get the index of the row containing the Match.
-        
+
         Parameters
         ----------
         match: Match
@@ -292,7 +292,7 @@ class MatchupSheet(object):
         -------
         Optional[int]
             The row index (from 0) of the Match, or None if nothing found.
-            
+
         Raises
         ------
         IncorrectWksException

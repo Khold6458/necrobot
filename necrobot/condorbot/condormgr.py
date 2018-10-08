@@ -14,7 +14,6 @@ from necrobot.league import leaguestats
 from necrobot.match import matchutil
 from necrobot.match.match import Match
 from necrobot.match.matchroom import MatchRoom
-from necrobot.stream.vodrecord import VodRecorder
 from necrobot.util import server, strutil, rtmputil
 from necrobot.util.singleton import Singleton
 
@@ -51,11 +50,7 @@ class CondorMgr(Manager, metaclass=Singleton):
             bot_channel.default_commands.append(cmd_sheet.PushMatchToSheet(bot_channel))
 
     async def ne_process(self, ev: NecroEvent):
-        if ev.event_type == 'begin_match_race':
-            asyncio.ensure_future(VodRecorder().start_record(ev.match.racer_1.rtmp_name))
-            asyncio.ensure_future(VodRecorder().start_record(ev.match.racer_2.rtmp_name))
-
-        elif ev.event_type == 'end_match':
+        if ev.event_type == 'end_match':
             async def record_score():
                 # noinspection PyShadowingNames
                 sheet = await self.get_gsheet(wks_id=ev.match.sheet_id)
@@ -88,10 +83,6 @@ class CondorMgr(Manager, metaclass=Singleton):
             asyncio.ensure_future(record_score())
             asyncio.ensure_future(record_standings())
             asyncio.ensure_future(send_mainchannel_message())
-
-        elif ev.event_type == 'end_match_race':
-            asyncio.ensure_future(VodRecorder().end_record(ev.match.racer_1.rtmp_name))
-            asyncio.ensure_future(VodRecorder().end_record(ev.match.racer_2.rtmp_name))
 
         elif ev.event_type == 'match_alert':
             if ev.final:
@@ -146,7 +137,7 @@ class CondorMgr(Manager, metaclass=Singleton):
 
     async def cawmentator_alert(self, match: Match):
         """PM an alert to the match cawmentator, if any, that the match is soon to begin
-        
+
         Parameters
         ----------
         match: Match
@@ -176,7 +167,7 @@ class CondorMgr(Manager, metaclass=Singleton):
 
     async def match_alert(self, match: Match) -> None:
         """Post an alert that the match is about to begin in the main channel
-        
+
         Parameters
         ----------
         match: Match

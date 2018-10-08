@@ -2,7 +2,7 @@ import datetime
 
 import pytz
 
-from match.matchgsheetinfo import MatchGSheetInfo
+from necrobot.match.matchgsheetinfo import MatchGSheetInfo
 from necrobot.botbase.necrobot import Necrobot
 from necrobot.match import matchdb
 from necrobot.match.match import Match
@@ -22,7 +22,7 @@ def invalidate_cache():
 
 # noinspection PyIncorrectDocstring
 async def make_match(*args, register=False, update=False, **kwargs) -> Match:
-    """Create a Match object. There should be no need to call this directly; use matchutil.make_match instead, 
+    """Create a Match object. There should be no need to call this directly; use matchutil.make_match instead,
     since this needs to interact with the database.
 
     Parameters
@@ -53,8 +53,8 @@ async def make_match(*args, register=False, update=False, **kwargs) -> Match:
     sheet_id: int
         The sheetID of the worksheet the match was created from, if any.
     register: bool
-        Whether to register the match in the database. 
-        
+        Whether to register the match in the database.
+
     Returns
     ---------
     Match
@@ -77,7 +77,7 @@ async def make_match(*args, register=False, update=False, **kwargs) -> Match:
 
 async def get_match_from_id(match_id: int) -> Match or None:
     """Get a match object from its DB unique ID.
-    
+
     Parameters
     ----------
     match_id: int
@@ -102,11 +102,11 @@ async def get_match_from_id(match_id: int) -> Match or None:
 
 
 async def get_upcoming_and_current() -> list:
-    """    
+    """
     Returns
     -------
     list[Match]
-        A list of all upcoming and ongoing matches, in order. 
+        A list of all upcoming and ongoing matches, in order.
     """
     matches = []
     for row in await matchdb.get_channeled_matches_raw_data(must_be_scheduled=True, order_by_time=True):

@@ -2,15 +2,13 @@ import datetime
 
 import pytz
 
-import match.cmd_matchmake
-import match.matchchannelutil
 import necrobot.exception
 from necrobot.botbase.command import Command
 from necrobot.botbase.commandtype import CommandType
 from necrobot.config import Config
 from necrobot.league import leaguedb
 from necrobot.league.leaguemgr import LeagueMgr
-from necrobot.match import matchutil, cmd_match, matchinfo, matchdb
+from necrobot.match import matchutil, cmd_match, cmd_matchmake, matchinfo, matchdb, matchchannelutil
 from necrobot.user import userlib
 from necrobot.util import server
 from necrobot.util.parse import dateparse
@@ -54,7 +52,7 @@ class CloseAllMatches(CommandType):
         )
         await self.client.send_typing(cmd.channel)
 
-        await match.matchchannelutil.delete_all_match_channels(log=log)
+        await matchchannelutil.delete_all_match_channels(log=log)
 
         await self.client.edit_message(
             status_message,
@@ -79,7 +77,7 @@ class CloseFinished(CommandType):
         )
         await self.client.send_typing(cmd.channel)
 
-        await match.matchchannelutil.delete_all_match_channels(log=log, completed_only=True)
+        await matchchannelutil.delete_all_match_channels(log=log, completed_only=True)
 
         await self.client.edit_message(
             status_message,
@@ -151,7 +149,7 @@ class DropRacer(CommandType):
             )
             return
 
-        matches = await match.matchchannelutil.get_matches_with_channels(racer=user)
+        matches = await matchchannelutil.get_matches_with_channels(racer=user)
         deleted_any = False
         for match in matches:
             channel = server.find_channel(channel_id=match.channel_id)
@@ -246,7 +244,7 @@ class MakeMatch(CommandType):
             )
             return
 
-        await match.cmd_matchmake.make_match_from_cmd(
+        await cmd_matchmake.make_match_from_cmd(
             cmd=cmd,
             cmd_type=self,
             racer_names=[cmd.args[0], cmd.args[1]],
@@ -298,15 +296,15 @@ class Register(CommandType):
 
 class RegisterCondorEvent(CommandType):
     def __init__(self, bot_channel):
-        CommandType.__init__(self, bot_channel, 'register-condor-event')
-        self.help_text = '`{0} schema_name`: Create a new CoNDOR event in the database, and set this to ' \
+        CommandType.__init__(self, bot_channel, 'register-event')
+        self.help_text = '`{0} schema_name`: Create a new event in the database, and set this to ' \
                          'be the bot\'s current event.' \
             .format(self.mention)
         self.admin_only = True
 
     @property
     def short_help_text(self):
-        return 'Create a new CoNDOR event.'
+        return 'Create a new event.'
 
     async def _do_execute(self, cmd: Command):
         if len(cmd.args) != 1:
@@ -335,7 +333,7 @@ class RegisterCondorEvent(CommandType):
 
         await self.client.send_message(
             cmd.channel,
-            'Registered new CoNDOR event `{0}`, and set it to be the bot\'s current event.'.format(schema_name)
+            'Registered new event `{0}`, and set it to be the bot\'s current event.'.format(schema_name)
         )
 
 

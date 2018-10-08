@@ -7,6 +7,7 @@ from necrobot.ladder import ratingutil
 from necrobot.league.leaguemgr import LeagueMgr
 from necrobot.match.matchmgr import MatchMgr
 from necrobot.util import console
+from necrobot.config import Config
 from necrobot import logon
 
 
@@ -15,6 +16,9 @@ async def load_condorbot_config(necrobot):
     necrobot.register_pm_channel(CondorPMChannel())
 
     # Main Channel
+    server.main_channel = server.find_channel(channel_name=Config.MAIN_CHANNEL_NAME)
+    if server.main_channel is None:
+        console.warning(f'Could not find the "{Config.MAIN_CHANNEL_NAME}" channel.')
     necrobot.register_bot_channel(server.main_channel, CondorMainChannel())
 
     # Admin channel
@@ -34,7 +38,7 @@ async def load_condorbot_config(necrobot):
 
 if __name__ == "__main__":
     logon.logon(
-        config_filename='data/condorbot_config',
+        config_filename='data/condorbot.json',
         logging_prefix='condorbot',
         load_config_fn=load_condorbot_config
     )
