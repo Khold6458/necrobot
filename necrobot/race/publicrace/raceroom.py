@@ -120,6 +120,7 @@ class RaceRoom(BotChannel):
         if seed_str:
             seed_str = '\n' + seed_str
 
+
         return race.race_info.cat_str + room_rider + seed_str + '\n'
 
 # Methods -------------------------------------------------------------

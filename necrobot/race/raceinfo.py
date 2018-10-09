@@ -13,6 +13,7 @@ class RaceInfo(object):
 
         the_copy.category = race_info.category
         the_copy.cat_str = race_info.cat_str
+        the_copy.seeded = race_info.seeded
         the_copy.can_be_solo = race_info.can_be_solo
         the_copy.post_results = race_info.post_results
         the_copy.condor_race = race_info.condor_race
