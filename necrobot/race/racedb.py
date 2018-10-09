@@ -17,7 +17,7 @@ async def record_race(race: Race) -> None:
         race_params = (
             race.start_datetime.strftime('%Y-%m-%d %H:%M:%S'),
             type_id,
-            race.race_info.seed,
+            race.race_info.seed if race.race_info.seeded else 0,
             race.race_info.condor_race,
             race.race_info.private_race,
         )
