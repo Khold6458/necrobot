@@ -43,21 +43,17 @@ class RaceInfo(object):
 
 def parse_args(args):
     seeded = '-s' in args or '--seeded' in args
-    race_info = RaceInfo(seeded=seeded)
 
     for arg in args.copy():
         if arg.startswith('-'):
             args.remove(arg)
 
     if not args:
-        return race_info
+        return RaceInfo(seeded=seeded)
     elif args[0].lower() == 'custom':
         try:
-            race_info.category = Category.CUSTOM
-            race_info.cat_str = args[1]
+            return RaceInfo(Category.CUSTOM, args[1], seeded)
         except IndexError:
             raise necrobot.exception.ParseException('Provide a description. Ex: `.make custom "Max Low"`')
     else:
-        race_info.category = Category.fromstr(args[0])
-
-    return race_info
+        return RaceInfo(Category.fromstr(args[0]), seeded=seeded)
