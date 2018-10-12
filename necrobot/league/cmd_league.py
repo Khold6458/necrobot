@@ -346,7 +346,7 @@ class SetCondorEvent(CommandType):
 
     @property
     def short_help_text(self):
-        return 'Set the bot\'s current CoNDOR event.'
+        return 'Set the bot\'s current event.'
 
     async def _do_execute(self, cmd: Command):
         if len(cmd.args) != 1:
@@ -370,7 +370,7 @@ class SetCondorEvent(CommandType):
         league_name_str = ' ({0})'.format(league_name) if league_name is not None else ''
         await self.client.send_message(
             cmd.channel,
-            'Set the current CoNDOR event to `{0}`{1}.'.format(schema_name, league_name_str)
+            'Set the current event to `{0}`{1}.'.format(schema_name, league_name_str)
         )
 
 
@@ -418,7 +418,7 @@ class SetEventName(CommandType):
     def __init__(self, bot_channel):
         CommandType.__init__(self, bot_channel, 'setname')
         self.help_text = '`{0} league_name`: Set the name of bot\'s current event. Note: This does not ' \
-                         'change or create a new event! Use `.register-condor-event` and `.set-condor-event`.' \
+                         'change or create a new event! Use `.register-event` and `.setevent`.' \
             .format(self.mention)
         self.admin_only = True
 
@@ -440,7 +440,7 @@ class SetEventName(CommandType):
 
         await self.client.send_message(
             cmd.channel,
-            'Set the name of current CoNDOR event (`{0}`) to {1}.'.format(league.schema_name, league.name)
+            'Set the name of current event (`{0}`) to {1}.'.format(league.schema_name, league.name)
         )
 
 
