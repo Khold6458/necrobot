@@ -31,11 +31,12 @@ from necrobot.league.league import League
 from necrobot.match.matchinfo import MatchInfo
 from necrobot.race.raceinfo import RaceInfo
 from necrobot.race import racedb
+from necrobot.util.category import Category
 
 
 async def create_league(schema_name: str) -> League:
     """Creates a new CoNDOR event with the given schema_name as its database.
-    
+
     Parameters
     ----------
     schema_name: str
@@ -54,8 +55,8 @@ async def create_league(schema_name: str) -> League:
     async with DBConnect(commit=True) as cursor:
         cursor.execute(
             """
-            SELECT `league_name` 
-            FROM `leagues` 
+            SELECT `league_name`
+            FROM `leagues`
             WHERE `schema_name`=%s
             """,
             params
@@ -65,8 +66,8 @@ async def create_league(schema_name: str) -> League:
 
         cursor.execute(
             """
-            SELECT SCHEMA_NAME 
-            FROM INFORMATION_SCHEMA.SCHEMATA 
+            SELECT SCHEMA_NAME
+            FROM INFORMATION_SCHEMA.SCHEMATA
             WHERE SCHEMA_NAME = %s
             """,
             params
@@ -76,15 +77,15 @@ async def create_league(schema_name: str) -> League:
 
         cursor.execute(
             """
-            CREATE SCHEMA `{schema_name}` 
-            DEFAULT CHARACTER SET = utf8 
+            CREATE SCHEMA `{schema_name}`
+            DEFAULT CHARACTER SET = utf8
             DEFAULT COLLATE = utf8_general_ci
             """.format(schema_name=schema_name)
         )
         cursor.execute(
             """
-            INSERT INTO `leagues` 
-            (`schema_name`) 
+            INSERT INTO `leagues`
+            (`schema_name`)
             VALUES (%s)
             """,
             params
@@ -114,7 +115,7 @@ async def create_league(schema_name: str) -> League:
         cursor.execute(
             """
             CREATE VIEW {race_summary} AS
-                SELECT 
+                SELECT
                     {matches}.`match_id` AS `match_id`,
                     {match_races}.`race_number` AS `race_number`,
                     `users_winner`.`user_id` AS `winner_id`,
@@ -124,20 +125,20 @@ async def create_league(schema_name: str) -> League:
                 FROM
                     {matches}
                     JOIN {match_races} ON {matches}.`match_id` = {match_races}.`match_id`
-                    JOIN `users` `users_winner` ON 
-                        IF( {match_races}.`winner` = 1, 
-                            `users_winner`.`user_id` = {matches}.`racer_1_id`, 
+                    JOIN `users` `users_winner` ON
+                        IF( {match_races}.`winner` = 1,
+                            `users_winner`.`user_id` = {matches}.`racer_1_id`,
                             `users_winner`.`user_id` = {matches}.`racer_2_id`
                         )
-                    JOIN `users` `users_loser` ON 
-                        IF( {match_races}.`winner` = 1, 
-                            `users_loser`.`user_id` = {matches}.`racer_2_id`, 
+                    JOIN `users` `users_loser` ON
+                        IF( {match_races}.`winner` = 1,
+                            `users_loser`.`user_id` = {matches}.`racer_2_id`,
                             `users_loser`.`user_id` = {matches}.`racer_1_id`
                         )
-                    LEFT JOIN {race_runs} `race_runs_winner` ON 
+                    LEFT JOIN {race_runs} `race_runs_winner` ON
                         `race_runs_winner`.`user_id` = `users_winner`.`user_id`
                         AND `race_runs_winner`.`race_id` = {match_races}.`race_id`
-                    LEFT JOIN {race_runs} `race_runs_loser` ON 
+                    LEFT JOIN {race_runs} `race_runs_loser` ON
                         `race_runs_loser`.`user_id` = `users_loser`.`user_id`
                         AND `race_runs_loser`.`race_id` = {match_races}.`race_id`
                 WHERE NOT {match_races}.`canceled`
@@ -168,7 +169,7 @@ async def create_league(schema_name: str) -> League:
                         ELSE 0
                     END)) AS `racer_2_wins`,
                     (CASE
-                        WHEN 
+                        WHEN
                             {matches}.`is_best_of`
                         THEN
                             GREATEST(
@@ -214,7 +215,7 @@ async def create_league(schema_name: str) -> League:
 
 async def get_entrant_ids() -> list:
     """Get NecroUser IDs for all entrants to the league
-    
+
     Returns
     -------
     list[int]
@@ -248,37 +249,28 @@ async def get_league(schema_name: str) -> League:
     async with DBConnect(commit=False) as cursor:
         cursor.execute(
             """
-            SELECT 
-               `leagues`.`league_name`, 
-               `leagues`.`number_of_races`, 
-               `leagues`.`is_best_of`, 
-               `leagues`.`ranked`, 
+            SELECT
+               `leagues`.`league_name`,
+               `leagues`.`number_of_races`,
+               `leagues`.`is_best_of`,
+               `leagues`.`ranked`,
                `leagues`.`gsheet_id`,
                `leagues`.`deadline`,
-               `race_types`.`character`, 
-               `race_types`.`descriptor`, 
-               `race_types`.`seeded`, 
-               `race_types`.`amplified`, 
-               `race_types`.`seed_fixed` 
-            FROM `leagues` 
-            LEFT JOIN `race_types` ON `leagues`.`race_type` = `race_types`.`type_id` 
-            WHERE `leagues`.`schema_name` = %s 
+               `race_types`.`category`,
+               `race_types`.`descriptor`,
+               `race_types`.`seeded`
+            FROM `leagues`
+            LEFT JOIN `race_types` ON `leagues`.`race_type` = `race_types`.`type_id`
+            WHERE `leagues`.`schema_name` = %s
             LIMIT 1
             """,
             params
         )
         for row in cursor:
-            race_info = RaceInfo()
-            if row[6] is not None:
-                race_info.set_char(row[6])
-            if row[7] is not None:
-                race_info.descriptor = row[7]
-            if row[8] is not None:
-                race_info.seeded = bool(row[8])
-            if row[9] is not None:
-                race_info.amplified = bool(row[9])
-            if row[10] is not None:
-                race_info.seed_fixed = bool(row[10])
+            if all(i is not None for i in row[6:9]):
+                race_info = RaceInfo(Category.fromstr(row[6]), row[7], bool(row[8]))
+            else:
+                race_info = RaceInfo()
 
             match_info = MatchInfo(
                 max_races=int(row[1]) if row[1] is not None else None,
@@ -301,7 +293,7 @@ async def get_league(schema_name: str) -> League:
 
 async def register_user(user_id: int) -> None:
     """Register the user for the league
-    
+
     Parameters
     ----------
     user_id: int
@@ -323,7 +315,7 @@ async def register_user(user_id: int) -> None:
 
 async def write_league(league: League) -> None:
     """Write the league to the database
-    
+
     Parameters
     ----------
     league: League
@@ -347,25 +339,25 @@ async def write_league(league: League) -> None:
 
         cursor.execute(
             """
-            INSERT INTO `leagues` 
+            INSERT INTO `leagues`
             (
-                `schema_name`, 
-                `league_name`, 
-                `gsheet_id`, 
-                `deadline`, 
-                `number_of_races`, 
-                `is_best_of`, 
-                `ranked`, 
+                `schema_name`,
+                `league_name`,
+                `gsheet_id`,
+                `deadline`,
+                `number_of_races`,
+                `is_best_of`,
+                `ranked`,
                 `race_type`
-            ) 
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s) 
+            )
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
             ON DUPLICATE KEY UPDATE
-               `league_name` = VALUES(`league_name`), 
+               `league_name` = VALUES(`league_name`),
                `gsheet_id` = VALUES(`gsheet_id`),
                `deadline` = VALUES(`deadline`),
-               `number_of_races` = VALUES(`number_of_races`), 
-               `is_best_of` = VALUES(`is_best_of`), 
-               `ranked` = VALUES(`ranked`), 
+               `number_of_races` = VALUES(`number_of_races`),
+               `is_best_of` = VALUES(`is_best_of`),
+               `ranked` = VALUES(`ranked`),
                `race_type` = VALUES(`race_type`)
             """,
             params

@@ -1,5 +1,4 @@
 import necrobot.exception
-from necrobot.util.parse import matchparse
 from necrobot.race import raceinfo
 
 from necrobot.race.raceinfo import RaceInfo
@@ -37,72 +36,29 @@ class MatchInfo(object):
 
         ranked_str = 'ranked' if self.ranked else 'unranked'
 
-        return '{0}, {1}, {2}'.format(self.race_info.format_str, match_format_info, ranked_str)
+        return '{0}, {1}, {2}'.format(self.race_info.cat_str, match_format_info, ranked_str)
 
 
 def parse_args(args: list) -> MatchInfo:
-    """Parses the given command-line args into a RaceInfo.
-    
-    Parameters
-    ----------
-    args: list[str]
-        The list of command-line args. Warning: list will be empty after this method.
+    """Parses the given command-line args into a MatchInfo."""
+    seeded = '-s' in args or '--seeded' in args
+    repeat = '-r' in args or '--repeat' in args
 
-    Returns
-    -------
-    MatchInfo
-        The created MatchInfo.
-        
-    Raises
-    ------
-    ParseException
-    """
-    return parse_args_modify(args, MatchInfo())
+    for arg in args.copy():
+        if arg.startswith('-'):
+            args.remove(arg)
 
+    if len(args) < 2:
+        raise necrobot.exception.ParseException(f'Incorrect number of arguments.')
 
-def parse_args_modify(args: list, match_info: MatchInfo) -> MatchInfo:
-    """Returns a new MatchInfo which is the supplied MatchInfo with information changed as specified
-    by args.
-    
-    Parameters
-    ----------
-    args: list[str]
-        The list of command-line args. Warning: list will be empty after this method.
-    match_info: MatchInfo
-        The RaceInfo to get a modified version of.
+    try:
+        num = int(args[1])
+        del args[1]
+    except ValueError:
+        raise necrobot.exception.ParseException(f'Error parsing `{args[1]}` as a number of races.')
 
-    Returns
-    -------
-    MatchInfo
-        The modified MatchInfo.
-        
-    Raises
-    ------
-    ParseException
-    """
-    new_match_info = MatchInfo.copy(match_info)
-    parsed_dict = matchparse.parse_matchtype_args(args)
-    new_match_info.race_info = raceinfo.parse_from_dict(parsed_dict, match_info.race_info)
-    for keyword, params in parsed_dict.items():
-        if keyword == 'bestof':
-            try:
-                new_match_info.max_races = int(params[0])
-            except ValueError:
-                raise necrobot.exception.ParseException(
-                    "Couldn't interpret {0} as a number of races.".format(params[0])
-                )
-            new_match_info.is_best_of = True
-        elif keyword == 'repeat':
-            try:
-                new_match_info.max_races = int(params[0])
-            except ValueError:
-                raise necrobot.exception.ParseException(
-                    "Couldn't interpret {0} as a number of races.".format(params[0])
-                )
-            new_match_info.is_best_of = False
-        elif keyword == 'ranked':
-            new_match_info.ranked = True
-        elif keyword == 'unranked':
-            new_match_info.ranked = False
+    race_info = raceinfo.parse_args(args)
+    race_info.seeded = seeded
 
-    return new_match_info
+    return MatchInfo(max_races=num, is_best_of=(repeat is None), race_info=race_info)
+

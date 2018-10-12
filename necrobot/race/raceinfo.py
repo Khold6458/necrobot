@@ -1,5 +1,4 @@
 import necrobot.exception
-from necrobot.util.parse import matchparse
 from necrobot.util.necrodancer import seedgen
 from necrobot.util.category import Category
 

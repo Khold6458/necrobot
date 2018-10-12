@@ -17,7 +17,6 @@ from necrobot import logon
 
 TEST_CONDOR = True
 TEST_CONFIG = False
-TEST_PARSE = False
 TEST_SHEETS = False
 TEST_USER = False
 
@@ -28,10 +27,6 @@ if TEST_CONDOR:
 if TEST_CONFIG:
     # noinspection PyUnresolvedReferences
     from necrobot.config import TestConfig, Config
-
-if TEST_PARSE:
-    # noinspection PyUnresolvedReferences
-    from necrobot.util.parse.matchparse import TestMatchParse
 
 if TEST_SHEETS:
     # noinspection PyUnresolvedReferences

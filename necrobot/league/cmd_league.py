@@ -173,7 +173,7 @@ class DropRacer(CommandType):
 class GetCurrentEvent(CommandType):
     def __init__(self, bot_channel):
         CommandType.__init__(self, bot_channel, 'eventinfo')
-        self.help_text = 'Get the identifier and name of the current CoNDOR event.' \
+        self.help_text = 'Get the identifier and name of the current event.' \
             .format(self.mention)
         self.admin_only = True
 
@@ -447,13 +447,10 @@ class SetEventName(CommandType):
 class SetMatchRules(CommandType):
     def __init__(self, bot_channel):
         CommandType.__init__(self, bot_channel, 'setrules')
-        self.help_text = \
-            'Set the current event\'s default match rules. Flags:\n' \
-            '`bestof X | repeat X`: Set the match to be a best-of-X or a repeat-X.\n' \
-            '`charname`: Set the default match character.\n' \
-            '`u | s | seed X`: Set the races to be unseeded, seeded, or with a fixed seed.\n' \
-            '`custom desc`: Give the matches a custom description.\n' \
-            '`nodlc`: Matches are marked as being without the Amplified DLC.'
+        self.help_text = (
+            'Set the current event\'s default match rules.\n' +
+            f'`{self.mention} category best-of-N [-s | --seeded] [-r | --repeat]`'
+        )
         self.admin_only = True
 
     @property
@@ -472,10 +469,7 @@ class SetMatchRules(CommandType):
         try:
             match_info = matchinfo.parse_args(cmd.args)
         except necrobot.exception.ParseException as e:
-            await self.client.send_message(
-                cmd.channel,
-                'Error parsing inputs: {0}'.format(e)
-            )
+            await self.client.send_message(cmd.channel, e)
             return
 
         league.match_info = match_info
