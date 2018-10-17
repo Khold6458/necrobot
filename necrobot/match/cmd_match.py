@@ -16,14 +16,14 @@ from necrobot.util.parse import dateparse
 # Match-related main-channel commands
 class Cawmentate(CommandType):
     def __init__(self, bot_channel):
-        CommandType.__init__(self, bot_channel, 'cawmentate', 'commentate', 'cawmmentate')
-        self.help_text = 'Register yourself for cawmentary for a given match. Usage is `{0} rtmp1 ' \
+        CommandType.__init__(self, bot_channel, 'commentate')
+        self.help_text = 'Register yourself for commentary for a given match. Usage is `{0} rtmp1 ' \
                          'rtmn2`, where `rtmp1` and `rtmn2` are the RTMP names of the racers in the match. ' \
                          '(Call `.userinfo` for RTMP names.)'.format(self.mention)
 
     @property
     def short_help_text(self):
-        return 'Register for cawmentary.'
+        return 'Register for commentary.'
 
     async def _do_execute(self, cmd):
         await _do_cawmentary_command(cmd, self, add=True)
@@ -31,12 +31,12 @@ class Cawmentate(CommandType):
 
 class Uncawmentate(CommandType):
     def __init__(self, bot_channel):
-        CommandType.__init__(self, bot_channel, 'uncawmentate', 'uncommentate', 'uncawmmentate')
-        self.help_text = 'Remove yourself as cawmentator for a match. Usage is `{0} rtmp1 rtmp2`.'.format(self.mention)
+        CommandType.__init__(self, bot_channel, 'uncommentate')
+        self.help_text = 'Remove yourself as commentator for a match. Usage is `{0} rtmp1 rtmp2`.'.format(self.mention)
 
     @property
     def short_help_text(self):
-        return 'Unregister for cawmentary.'
+        return 'Unregister for commentary.'
 
     async def _do_execute(self, cmd):
         await _do_cawmentary_command(cmd=cmd, cmd_type=self, add=False)
@@ -79,7 +79,7 @@ class Vod(CommandType):
         if match.cawmentator_id is None or match.cawmentator_id != author_user.user_id:
             await self.client.send_message(
                 cmd.channel,
-                '{0}: You are not the cawmentator for the match {1} (and so cannot add a vod).'
+                '{0}: You are not the commentator for the match {1} (and so cannot add a vod).'
                 .format(cmd.author.mention, match.matchroom_name)
             )
             return
@@ -735,26 +735,26 @@ async def _do_cawmentary_command(cmd: Command, cmd_type: CommandType, add: bool)
             if cawmentator_user is not None:
                 await cmd_type.client.send_message(
                     cmd.channel,
-                    'This match already has a cawmentator ({0}).'.format(cawmentator_user.display_name)
+                    'This match already has a commentator ({0}).'.format(cawmentator_user.display_name)
                 )
                 return
             else:
                 console.warning(
                     'Unexpected error in Cawmentate._do_execute(): Couldn\'t find NecroUser for '
-                    'cawmentator ID {0}'.format(match.cawmentator_id)
+                    'commentator ID {0}'.format(match.cawmentator_id)
                 )
                 # No return here; we'll just write over this mystery ID
     else:  # not add
         if match.cawmentator_id is None:
             await cmd_type.client.send_message(
                 cmd.channel,
-                'No one is registered for cawmentary for the match {0}.'.format(match.matchroom_name)
+                'No one is registered for commentary for the match {0}.'.format(match.matchroom_name)
             )
             return
         elif match.cawmentator_id != author_user.user_id:
             await cmd_type.client.send_message(
                 cmd.channel,
-                'Error: {0}: You are not the registered cawmentator for {1}.'.format(
+                'Error: {0}: You are not the registered commentator for {1}.'.format(
                     cmd.author.mention, match.matchroom_name
                 )
             )
@@ -766,7 +766,7 @@ async def _do_cawmentary_command(cmd: Command, cmd_type: CommandType, add: bool)
         await NEDispatch().publish(event_type='set_cawmentary', match=match)
         await cmd_type.client.send_message(
             cmd.channel,
-            'Added {0} as cawmentary for the match {1}.'.format(
+            'Added {0} as commentary for the match {1}.'.format(
                 cmd.author.mention, match.matchroom_name
             )
         )
@@ -775,7 +775,7 @@ async def _do_cawmentary_command(cmd: Command, cmd_type: CommandType, add: bool)
         await NEDispatch().publish(event_type='set_cawmentary', match=match)
         await cmd_type.client.send_message(
             cmd.channel,
-            'Removed {0} as cawmentary from the match {1}.'.format(
+            'Removed {0} as commentary from the match {1}.'.format(
                 cmd.author.mention, match.matchroom_name
             )
         )

@@ -61,14 +61,14 @@ class WorksheetIndexData(object):
 
     async def initialize(self, wks_name: str, wks_id: str) -> None:
         """Read the GSheet and store the indicies of columns
-        
+
         Parameters
         ----------
         wks_name: str
             The name of the worksheet to initialize from.
         wks_id: int
             The ID of the worksheet to initialize from.
-        
+
         Raises
         ------
         googleapiclient.error.Error

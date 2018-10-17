@@ -147,7 +147,7 @@ async def get_nextrace_displaytext(match_list: list) -> str:
         display_text += ': {0} \n'.format(timestr.timedelta_to_str(match.suggested_time - utcnow, punctuate=True))
         match_cawmentator = await match.get_cawmentator()
         if match_cawmentator is not None:
-            display_text += '    Cawmentary: <http://www.twitch.tv/{0}> \n'.format(match_cawmentator.twitch_name)
+            display_text += '    Commentary: <http://www.twitch.tv/{0}> \n'.format(match_cawmentator.twitch_name)
         elif match.racer_1.twitch_name is not None and match.racer_2.twitch_name is not None:
             display_text += '    Kadgar: {} \n'.format(
                 rtmputil.kadgar_link(match.racer_1.twitch_name, match.racer_2.twitch_name)

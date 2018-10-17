@@ -25,7 +25,7 @@ class MatchupSheetIndexData(WorksheetIndexData):
                 'match id',
                 'racer 1',
                 'racer 2',
-                'cawmentary',
+                'commentary',
                 'date',
                 'type',
                 'score',
@@ -145,7 +145,15 @@ class MatchupSheet(object):
                     match_info = kwarg_copy['match_info'] if 'match_info' in kwargs else matchinfo.MatchInfo()
                     try:
                         parsed_args = shlex.split(row_values[self.column_data.type])
-                        kwarg_copy['match_info'] = matchinfo.parse_args_modify(parsed_args, match_info)
+
+                        for arg in parsed_args:
+                            try:
+                                attr, value = arg.split('=')
+                            except ValueError:
+                                continue
+                            setattr(match_info, attr, int(value))
+
+                        kwarg_copy['match_info'] = match_info
                     except IndexError:
                         pass
 
@@ -235,15 +243,15 @@ class MatchupSheet(object):
         row = await self._get_match_row(match)
         if row is None:
             return
-        if self.column_data.cawmentary is None:
-            console.warning('No Cawmentary column on GSheet.')
+        if self.column_data.commentary is None:
+            console.warning('No Commentary column on GSheet.')
             return
 
         cawmentator = await userlib.get_user(user_id=match.cawmentator_id)
 
         await self.column_data.update_cell(
             row=row,
-            col=self.column_data.cawmentary,
+            col=self.column_data.commentary,
             value='twitch.tv/{0}'.format(cawmentator.twitch_name) if cawmentator is not None else '',
             raw_input=False
         )

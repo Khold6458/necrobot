@@ -147,7 +147,7 @@ class CondorMgr(Manager, metaclass=Singleton):
         if cawmentator is None or match.time_until_match is None:
             return
 
-        alert_format_str = 'Reminder: You\'re scheduled to cawmentate **{racer_1}** - **{racer_2}**, ' \
+        alert_format_str = 'Reminder: You\'re scheduled to commentate **{racer_1}** - **{racer_2}**, ' \
                            'which is scheduled to begin in {minutes} minutes.\n\n'
         alert_text = alert_format_str.format(
             racer_1=match.racer_1.display_name,
@@ -179,7 +179,7 @@ class CondorMgr(Manager, metaclass=Singleton):
         minutes_until_match = int((match.time_until_match.total_seconds() + 30) // 60)
         cawmentator = await match.get_cawmentator()
         if cawmentator is not None:
-            stream = 'Cawmentary: <http://www.twitch.tv/{0}>'.format(cawmentator.twitch_name)
+            stream = 'Commentary: <http://www.twitch.tv/{0}>'.format(cawmentator.twitch_name)
         else:
             stream = 'Kadgar: {}'.format(rtmputil.kadgar_link(match.racer_1.twitch_name, match.racer_2.twitch_name))
             # stream = 'RTMP: {}'.format(rtmputil.rtmp_link(match.racer_1.rtmp_name, match.racer_2.rtmp_name))
