@@ -60,5 +60,5 @@ def parse_args(args: list) -> MatchInfo:
     race_info = raceinfo.parse_args(args)
     race_info.seeded = seeded
 
-    return MatchInfo(max_races=num, is_best_of=(repeat is None), race_info=race_info)
+    return MatchInfo(max_races=num, is_best_of=(not repeat), race_info=race_info)
 
