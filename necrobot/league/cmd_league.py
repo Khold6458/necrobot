@@ -472,6 +472,7 @@ class SetMatchRules(CommandType):
             await self.client.send_message(cmd.channel, e)
             return
 
+        match_info.race_info.condor_race = True
         league.match_info = match_info
         league.commit()
         await self.client.send_message(

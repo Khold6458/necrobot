@@ -114,7 +114,7 @@ class Confirm(CommandType):
             await self.client.send_message(
                 cmd.channel,
                 'Error: {0} is not registered. Please register with `.register` in the main channel. '
-                'If the problem persists, contact CoNDOR Staff.'.format(cmd.author.mention))
+                'If the problem persists, contact Staff.'.format(cmd.author.mention))
             return
 
         if match.is_confirmed_by(author_as_necrouser):
@@ -215,7 +215,7 @@ class Suggest(CommandType):
             await self.client.send_message(
                 cmd.channel,
                 'Error: {0} is not registered. Please register with `.stream` in the main channel. '
-                'If the problem persists, contact CoNDOR Staff.'.format(cmd.author.mention))
+                'If the problem persists, contact Staff.'.format(cmd.author.mention))
             return
 
         # Check that both racers in the match are registered
@@ -233,7 +233,7 @@ class Suggest(CommandType):
             await self.client.send_message(
                 cmd.channel,
                 'Error: {0} does not appear to be one of the racers in this match. '
-                'If this is in error, contact CoNDOR Staff.'.format(cmd.author.mention))
+                'If this is in error, contact Staff.'.format(cmd.author.mention))
             return
 
         # Get the racer's timezone
@@ -322,7 +322,7 @@ class Unconfirm(CommandType):
             await self.client.send_message(
                 cmd.channel,
                 'Error: {0} is not registered. Please register with `.register` in the main channel. '
-                'If the problem persists, contact CoNDOR Staff.'.format(cmd.author.mention))
+                'If the problem persists, contact Staff.'.format(cmd.author.mention))
             return
 
         if not match.is_confirmed_by(author_as_necrouser):

@@ -73,7 +73,7 @@ async def create_league(schema_name: str) -> League:
             params
         )
         for _ in cursor:
-            raise necrobot.exception.LeagueAlreadyExists('Schema exists, but is not a CoNDOR event.')
+            raise necrobot.exception.LeagueAlreadyExists('Schema exists, but is not a event.')
 
         cursor.execute(
             """
