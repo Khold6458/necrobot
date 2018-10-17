@@ -421,11 +421,16 @@ class MatchRoom(BotChannel):
             await self.current_race.enter_member(racer.member, mute=True)
 
         # Output text
+        if self.current_race.race_info.seeded:
+            seed_txt = f'Please input the seed `{self.current_race.race_info.seed}` and t'
+        else:
+            seed_txt = 'T'
+
         await self.write(
-            'Please input the seed ({1}) and type `.ready` when you are ready for the {0} race. '
-            'When both racers `.ready`, the race will begin.'.format(
-                ordinal.num_to_text(match_race_data.num_finished + 1),
-                self.current_race.race_info.seed))
+            f'{seed_txt}ype `.ready` when you are ready for the ' +
+            f'{ordinal.num_to_text(match_race_data.num_finished + 1)} race.' +
+            ' When both racers `.ready`, the race will begin.'
+        )
 
         if self._countdown_to_match_future is not None:
             self._countdown_to_match_future.cancel()
