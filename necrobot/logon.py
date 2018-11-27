@@ -20,7 +20,6 @@ import websockets
 from necrobot import config
 from necrobot.botbase.necrobot import Necrobot
 from necrobot.util import backoff, console
-from necrobot.util.necrodancer import seedgen
 
 
 def logon(
@@ -104,9 +103,6 @@ def logon(
     logger.addHandler(stdout_handler)
 
     console.info('Initializing necrobot...')
-
-    # Seed the random number generator------------------------
-    seedgen.init_seed()
 
     # Run client---------------------------------------------
     retry = backoff.ExponentialBackoff()

@@ -14,14 +14,8 @@ from necrobot.config import Config
 from necrobot.race.raceconfig import RaceConfig
 from necrobot.race.raceinfo import RaceInfo
 from necrobot.race.racer import Racer
-from necrobot.util import console, racetime
+from necrobot.util import console, racetime, seedgen
 from necrobot.util.ordinal import ordinal
-from necrobot.util.necrodancer import seedgen
-
-
-# from necrobot.util import ratelimit
-
-# CHECK_RATE_LIMITS = False
 
 
 # RaceEvent ---------------------------------------------

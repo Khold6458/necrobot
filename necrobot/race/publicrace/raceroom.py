@@ -8,14 +8,12 @@ import discord
 from necrobot.botbase.botchannel import BotChannel
 from necrobot.botbase.necrobot import Necrobot
 from necrobot.config import Config
-from necrobot.race import cmd_race
-from necrobot.race import raceinfo
+from necrobot.race import cmd_race, raceinfo, racedb
 from necrobot.race.publicrace import cmd_publicrace
 from necrobot.race.race import Race, RaceEvent
+from necrobot.user import cmd_user
 from necrobot.test import cmd_test
-from necrobot.util import server
-from necrobot.util import strutil
-from necrobot.race import racedb
+from necrobot.util import server, strutil
 
 
 class RaceRoom(BotChannel):
@@ -62,6 +60,7 @@ class RaceRoom(BotChannel):
             cmd_publicrace.ForceCancel(self),
             cmd_publicrace.ForceClose(self),
 
+            cmd_user.UserInfo(self),
             cmd_test.TestRace(self),
         ]
 
@@ -251,7 +250,7 @@ class RaceRoom(BotChannel):
         if self.race_info.seeded:
             await self.client.send_message(
                 self._channel,
-                '{0}\nRace number {1} is open for entry. Seed: {2}.'.format(
+                '{0}\nRace number {1} is open for entry. Seed: `{2}`'.format(
                     mention_text, self._race_number, self.current_race.race_info.seed))
         else:
             await self.client.send_message(

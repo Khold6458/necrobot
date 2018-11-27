@@ -1,4 +1,3 @@
-from necrobot.util import server
 from necrobot.condorbot.condoradminchannel import CondorAdminChannel
 from necrobot.condorbot.condormainchannel import CondorMainChannel
 from necrobot.condorbot.condormgr import CondorMgr
@@ -6,7 +5,7 @@ from necrobot.condorbot.condorpmchannel import CondorPMChannel
 from necrobot.ladder import ratingutil
 from necrobot.league.leaguemgr import LeagueMgr
 from necrobot.match.matchmgr import MatchMgr
-from necrobot.util import console
+from necrobot.util import server, console
 from necrobot.config import Config
 from necrobot import logon
 

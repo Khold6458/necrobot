@@ -1,5 +1,5 @@
 import necrobot.exception
-from necrobot.util.necrodancer import seedgen
+from necrobot.util import seedgen
 from necrobot.util.category import Category
 
 
@@ -31,7 +31,6 @@ class RaceInfo(object):
         self.condor_race = False
         self.private_race = False
 
-    # a string "Seed: (int)" if the race is seeded, or the empty string otherwise
     @property
     def seed_str(self):
         if self.seeded:
