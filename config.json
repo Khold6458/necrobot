@@ -7,6 +7,7 @@
     "racer_role": "Racer",
 
     "main_channel_name": "necrobot_main",
+    "admin_channel_name": "adminchat",
     "daily_leaderboards_channel_name": "daily_leaderboards",
     "ladder_admin_channel_name": "ladder_admin",
     "race_results_channel_name": "race_results",
