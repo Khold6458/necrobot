@@ -50,8 +50,8 @@ def parse_args(args):
         return RaceInfo(seeded=seeded)
     elif args[0].lower() == 'custom':
         try:
-            return RaceInfo(Category.CUSTOM, args[1], seeded)
+            return RaceInfo(Category.CUSTOM, ' '.join(args[1:]), seeded)
         except IndexError:
-            raise necrobot.exception.ParseException('Provide a description. Ex: `.make custom "Max Low"`')
+            raise necrobot.exception.ParseException('Provide a description. Ex: `.make custom Reverse%`')
     else:
-        return RaceInfo(Category.fromstr(args[0]), seeded=seeded)
+        return RaceInfo(Category.fromstr(' '.join(args)), seeded=seeded)

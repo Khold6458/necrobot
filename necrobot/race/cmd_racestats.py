@@ -1,9 +1,9 @@
+import necrobot.exception
 from necrobot.botbase.commandtype import CommandType
 from necrobot.race import racestats
 from necrobot.user import userlib
 from necrobot.util import server, strutil
 from necrobot.util.category import Category
-
 
 class Fastest(CommandType):
     def __init__(self, bot_channel):
@@ -13,20 +13,10 @@ class Fastest(CommandType):
     async def _do_execute(self, cmd):
         await server.client.send_typing(cmd.channel)
 
-        # Parse arguments
-        args = cmd.args
-
-        if len(cmd.args) != 1:
-            await self.client.send_message(
-                cmd.channel,
-                '{0}: Wrong number of arguments for `.fastest`.'.format(cmd.author.mention))
-            return
-
-        category = Category.fromstr(args[0])
-        if category is None:
-            await self.client.send_message(
-                cmd.channel,
-                '{0}: Couldn\'t parse {1} as a category.'.format(cmd.author.mention, args[0]))
+        try:
+            category = Category.fromstr(cmd.arg_string)
+        except necrobot.exception.ParseException as e:
+            await self.client.send_message(cmd.channel, e)
             return
 
         infotext = await racestats.get_fastest_times_infotext(category, 20)
@@ -46,17 +36,11 @@ class MostRaces(CommandType):
 
     async def _do_execute(self, cmd):
         await server.client.send_typing(cmd.channel)
-        if len(cmd.args) != 1:
-            await self.client.send_message(
-                cmd.channel,
-                '{0}: Wrong number of arguments for `.mostraces`.'.format(cmd.author.mention))
-            return
 
-        category = Category.fromstr(cmd.args[0])
-        if category is None:
-            await self.client.send_message(
-                cmd.channel,
-                '{0}: Couldn\'t parse {1} as a category.'.format(cmd.author.mention, cmd.args[0]))
+        try:
+            category = Category.fromstr(cmd.arg_string)
+        except necrobot.exception.ParseException as e:
+            await self.client.send_message(cmd.channel, e)
             return
 
         infotext = await racestats.get_most_races_infotext(category, 20)

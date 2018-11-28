@@ -149,6 +149,7 @@ class Config(object):
 
     # Channels --------------------------------------------------------------------------------
     MAIN_CHANNEL_NAME = 'necrobot_main'
+    ADMIN_CHANNEL_NAME = 'adminchat'
     DAILY_LEADERBOARDS_CHANNEL_NAME = 'daily_leaderboards'
     LADDER_ADMIN_CHANNEL_NAME = 'ladder_admin'
     RACE_RESULTS_CHANNEL_NAME = 'race_results'
