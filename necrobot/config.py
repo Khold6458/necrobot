@@ -183,10 +183,10 @@ class Config(object):
     MATCH_CHANNEL_CATEGORY_NAME = "Race rooms"
 
     # Races -----------------------------------------------------------------------------------
-    COUNTDOWN_LENGTH = int(10)
-    UNPAUSE_COUNTDOWN_LENGTH = int(3)
-    INCREMENTAL_COUNTDOWN_START = int(5)
-    FINALIZE_TIME_SEC = int(60)
+    COUNTDOWN_LENGTH = 10
+    UNPAUSE_COUNTDOWN_LENGTH = 3
+    INCREMENTAL_COUNTDOWN_START = 3
+    FINALIZE_TIME_SEC = 60
     RACE_CHANNEL_CATEGORY_NAME = "Race rooms"
 
     # RaceRooms -------------------------------------------------------------------------------

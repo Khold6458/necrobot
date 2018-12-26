@@ -103,14 +103,16 @@ class RaceStatus(IntEnum):
 # Race class --------------------------------------------------------------
 class Race(object):
     # NB: Call the coroutine initialize() to set up the room
-    def __init__(self, parent, race_info: RaceInfo, race_config: RaceConfig = RaceConfig()):
+    def __init__(self, parent, race_info, race_config=None):
         self.race_id = None                       # After recording, the ID of the race in the DB
         self.parent = parent                      # The parent managing this race. Must implement write() and process().
         self.race_info = RaceInfo.copy(race_info)
         self.racers = []                          # A list of Racer
 
         self._status = RaceStatus.uninitialized   # The status of this race
-        self._config = race_config                # The RaceConfig to use (determines some race behavior)
+
+        # The RaceConfig to use (determines some race behavior)
+        self._config = RaceConfig() if race_config is None else race_config
 
         self._countdown = int(0)                  # The current countdown
         self._start_datetime = None               # UTC time for the beginning of the race
