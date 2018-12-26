@@ -20,7 +20,7 @@ class Category(Enum):
     MAXHELL = 'Max Hell%'
     MAXLOW = 'Max Low%'
     AJE = 'All Journal Entries'
-    NOTPANY = 'No TP Any%'
+    NOTPANY = 'No Teleporter Any%'
     CHARS = 'All Characters'
     TEMPLE = 'Temple Shortcut%'
     ACHIEVE = 'All Achievements'
@@ -36,8 +36,10 @@ class Category(Enum):
         except KeyError:
             pass
 
-        cats = {cat.value: cat for cat in Category}
         try:
-            return cats[get_close_matches(capwords(cat_name), cats.keys(), 1, 0.8)[0]]
+            return cats[get_close_matches(capwords(cat_name), cats.keys(), 1, 0.65)[0]]
         except IndexError:
             raise necrobot.exception.ParseException(f'Could not parse `{cat_name}` as a category.')
+
+
+cats = {cat.value: cat for cat in Category}
